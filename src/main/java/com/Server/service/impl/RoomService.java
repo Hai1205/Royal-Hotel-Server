@@ -2,8 +2,8 @@ package com.Server.service.impl;
 
 import com.Server.dto.Response;
 import com.Server.dto.RoomDTO;
-import com.Server.entity.Booking;
-import com.Server.entity.Room;
+import com.Server.model.Booking;
+import com.Server.model.Room;
 import com.Server.exception.OurException;
 import com.Server.repo.BookingRepository;
 import com.Server.repo.RoomRepository;
@@ -49,6 +49,7 @@ public class RoomService implements IRoomService {
             response.setStatusCode(500);
             response.setMessage("Error occurred while saving a room: " + e.getMessage());
         }
+
         return response;
     }
 
@@ -72,6 +73,7 @@ public class RoomService implements IRoomService {
             response.setStatusCode(500);
             response.setMessage("Error occurred while getting  all room: " + e.getMessage());
         }
+
         return response;
     }
 
@@ -85,8 +87,6 @@ public class RoomService implements IRoomService {
 
             response.setStatusCode(200);
             response.setMessage("successful");
-
-
         } catch (OurException e) {
             response.setStatusCode(404);
             response.setMessage(e.getMessage());
@@ -126,6 +126,7 @@ public class RoomService implements IRoomService {
             response.setStatusCode(500);
             response.setMessage("Error occurred while updating  a room: " + e.getMessage());
         }
+
         return response;
     }
 
@@ -140,7 +141,6 @@ public class RoomService implements IRoomService {
             response.setStatusCode(200);
             response.setMessage("successful");
             response.setRoom(roomDTO);
-
         } catch (OurException e) {
             response.setStatusCode(404);
             response.setMessage(e.getMessage());
@@ -148,6 +148,7 @@ public class RoomService implements IRoomService {
             response.setStatusCode(500);
             response.setMessage("Error occurred while getting  a room by id: " + e.getMessage());
         }
+
         return response;
     }
 
@@ -165,7 +166,6 @@ public class RoomService implements IRoomService {
             response.setStatusCode(200);
             response.setMessage("successful");
             response.setRoomList(roomDTOList);
-
         } catch (OurException e) {
             response.setStatusCode(404);
             response.setMessage(e.getMessage());
@@ -173,6 +173,7 @@ public class RoomService implements IRoomService {
             response.setStatusCode(500);
             response.setMessage("Error occurred while getting  available rooms by date range: " + e.getMessage());
         }
+
         return response;
     }
 
@@ -187,11 +188,11 @@ public class RoomService implements IRoomService {
             response.setStatusCode(200);
             response.setMessage("successful");
             response.setRoomList(roomDTOList);
-
         }catch (Exception e) {
             response.setStatusCode(500);
             response.setMessage("Error occurred while getting  all available rooms: " + e.getMessage());
         }
+
         return response;
     }
 }

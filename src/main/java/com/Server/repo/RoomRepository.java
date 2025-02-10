@@ -1,6 +1,6 @@
 package com.Server.repo;
 
-import com.Server.entity.Room;
+import com.Server.model.Room;
 import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;

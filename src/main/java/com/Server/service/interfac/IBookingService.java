@@ -2,7 +2,7 @@ package com.Server.service.interfac;
 
 
 import com.Server.dto.Response;
-import com.Server.entity.Booking;
+import com.Server.model.Booking;
 
 public interface IBookingService {
 

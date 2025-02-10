@@ -1,4 +1,4 @@
-package com.Server.entity;
+package com.Server.model;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;

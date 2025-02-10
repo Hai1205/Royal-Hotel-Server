@@ -1,6 +1,6 @@
 package com.Server.repo;
 
-import com.Server.entity.Booking;
+import com.Server.model.Booking;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 

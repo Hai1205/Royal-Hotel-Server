@@ -5,6 +5,7 @@ import com.Server.dto.Response;
 import com.Server.service.interfac.IRoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -28,14 +29,13 @@ public class RoomController {
             @RequestParam(value = "roomPrice", required = false) BigDecimal roomPrice,
             @RequestParam(value = "roomDescription", required = false) String roomDescription
     ) {
-        if (photo == null || photo.isEmpty() || roomType == null || roomType.isBlank() || roomPrice == null) {
+        if (photo == null || roomType == null || roomPrice == null) {
             Response response = new Response();
             response.setStatusCode(400);
             response.setMessage("Please Provide values for all fields(photo, roomType, roomPrice)");
 
             return ResponseEntity.status(response.getStatusCode()).body(response);
         }
-
             Response response = roomService.addNewRoom(photo, roomType, roomPrice, roomDescription);
 
             return ResponseEntity.status(response.getStatusCode()).body(response);
@@ -44,8 +44,8 @@ public class RoomController {
     @GetMapping("/all")
     public ResponseEntity<Response> getAllRooms() {
         Response response = roomService.getAllRooms();
-        return ResponseEntity.status(response.getStatusCode()).body(response);
 
+        return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
     @GetMapping("/types")
@@ -56,12 +56,14 @@ public class RoomController {
     @GetMapping("/room-by-id/{roomId}")
     public ResponseEntity<Response> getRoomByID(@PathVariable("roomId") String roomId) {
         Response response = roomService.getRoomById(roomId);
+
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
     @GetMapping("/all-available-rooms")
     public ResponseEntity<Response> getAvailableRooms() {
         Response response = roomService.getAllAvailableRooms();
+
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
@@ -75,10 +77,11 @@ public class RoomController {
             Response response = new Response();
             response.setStatusCode(400);
             response.setMessage("All fields are required(checkInDate,checkOutDate,roomType )");
+
             return ResponseEntity.status(response.getStatusCode()).body(response);
         }
-
         Response response = roomService.getAvailableRoomsByDateAndType(checkInDate, checkOutDate, roomType);
+
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
@@ -91,14 +94,25 @@ public class RoomController {
             @RequestParam(value = "roomPrice", required = false) BigDecimal roomPrice,
             @RequestParam(value = "roomDescription", required = false) String roomDescription) {
         Response response = roomService.updateRoom(roomId, roomDescription, roomType, roomPrice, photo);
-        return ResponseEntity.status(response.getStatusCode()).body(response);
 
+        return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
     @DeleteMapping("/delete/{roomId}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Response> deleteRoom(@PathVariable String roomId) {
         Response response = roomService.deleteRoom(roomId);
+
         return ResponseEntity.status(response.getStatusCode()).body(response);
+    }
+
+    @GetMapping("/image/{roomId}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<byte[]> getImageByProductId(@PathVariable String roomId) {
+        Response response = roomService.getRoomById(roomId);
+
+        byte[] imageFile = response.getRoom().getImageData();
+
+        return ResponseEntity.ok().contentType(MediaType.valueOf(response.getRoom().getImageType())).body(imageFile);
     }
 }

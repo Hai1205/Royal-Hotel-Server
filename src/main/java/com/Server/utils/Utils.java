@@ -1,7 +1,7 @@
 package com.Server.utils;
 
 import com.Server.dto.*;
-import com.Server.entity.*;
+import com.Server.model.*;
 
 import java.security.SecureRandom;
 import java.util.List;
@@ -42,7 +42,7 @@ public class Utils {
         roomDTO.setRoomType(room.getRoomType());
         roomDTO.setRoomPrice(room.getRoomPrice());
         roomDTO.setImageName(room.getImageName());
-        roomDTO.setRoomType(room.getRoomType());
+        roomDTO.setImageType(room.getImageType());
         roomDTO.setImageData(room.getImageData());
         roomDTO.setRoomDescription(room.getRoomDescription());
 
@@ -67,11 +67,11 @@ public class Utils {
         RoomDTO roomDTO = new RoomDTO();
 
         roomDTO.setId(room.getId());
+        roomDTO.setImageName(room.getImageName());
+        roomDTO.setImageType(room.getImageType());
+        roomDTO.setImageData(room.getImageData());
         roomDTO.setRoomType(room.getRoomType());
         roomDTO.setRoomPrice(room.getRoomPrice());
-        roomDTO.setImageName(room.getImageName());
-        roomDTO.setRoomType(room.getRoomType());
-        roomDTO.setImageData(room.getImageData());
         roomDTO.setRoomDescription(room.getRoomDescription());
 
         if (room.getBookings() != null) {
