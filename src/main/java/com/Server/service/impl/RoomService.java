@@ -7,6 +7,7 @@ import com.Server.model.Room;
 import com.Server.exception.OurException;
 import com.Server.repo.BookingRepository;
 import com.Server.repo.RoomRepository;
+import com.Server.service.AwsS3Service;
 import com.Server.service.interfac.IRoomService;
 import com.Server.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,22 +26,27 @@ public class RoomService implements IRoomService {
 
     @Autowired
     private BookingRepository bookingRepository;
+    @Autowired
+    private AwsS3Service awsS3Service;
 
     @Override
     public Response addNewRoom(MultipartFile photo, String roomType, BigDecimal roomPrice, String description) {
+
         Response response = new Response();
 
         try {
+            String imageUrl = awsS3Service.saveImageToS3(photo);
             Room room = new Room();
-            room.setImageName(photo.getOriginalFilename());
-            room.setImageType(photo.getContentType());
-            room.setImageData(photo.getBytes());
+            room.setRoomPhotoUrl(imageUrl);
             room.setRoomPrice(roomPrice);
             room.setRoomType(roomType);
             room.setRoomDescription(description);
 
             Room savedRoo = roomRepository.save(room);
             RoomDTO roomDTO = Utils.mapRoomEntityToRoomDTO(savedRoo);
+//            System.out.println("room photo "+room.getRoomPhotoUrl());
+//            System.out.println("savedRoo photo "+savedRoo.getRoomPhotoUrl());
+//            System.out.println("roomDTO photo "+roomDTO.getRoomPhotoUrl());
 
             response.setStatusCode(200);
             response.setMessage("successful");
@@ -52,6 +58,32 @@ public class RoomService implements IRoomService {
 
         return response;
     }
+//    @Override
+//    public Response addNewRoom(MultipartFile photo, String roomType, BigDecimal roomPrice, String description) {
+//        Response response = new Response();
+//
+//        try {
+//            Room room = new Room();
+//            room.setImageName(photo.getOriginalFilename());
+//            room.setImageType(photo.getContentType());
+//            room.setImageData(photo.getBytes());
+//            room.setRoomPrice(roomPrice);
+//            room.setRoomType(roomType);
+//            room.setRoomDescription(description);
+//
+//            Room savedRoo = roomRepository.save(room);
+//            RoomDTO roomDTO = Utils.mapRoomEntityToRoomDTO(savedRoo);
+//
+//            response.setStatusCode(200);
+//            response.setMessage("successful");
+//            response.setRoom(roomDTO);
+//        } catch (Exception e) {
+//            response.setStatusCode(500);
+//            response.setMessage("Error occurred while saving a room: " + e.getMessage());
+//        }
+//
+//        return response;
+//    }
 
     @Override
     public List<String> getAllRoomTypes() {

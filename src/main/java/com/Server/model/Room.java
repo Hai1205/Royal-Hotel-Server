@@ -21,6 +21,8 @@ public class Room {
 
     private String roomDescription;
 
+    private String roomPhotoUrl;
+
     private String imageName;
 
     private String imageType;
@@ -36,6 +38,7 @@ public class Room {
                 "id=" + id +
                 ", roomType='" + roomType + '\'' +
                 ", roomPrice=" + roomPrice +
+                ", roomPhotoUrl='" + roomPhotoUrl + '\'' +
                 ", imageName='" + imageName + '\'' +
                 ", imageType='" + imageType + '\'' +
                 ", imageDataLength=" + (imageData != null ? imageData.length : 0) + " bytes" +

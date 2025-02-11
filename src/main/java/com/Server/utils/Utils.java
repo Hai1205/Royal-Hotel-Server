@@ -41,6 +41,7 @@ public class Utils {
         roomDTO.setId(room.getId());
         roomDTO.setRoomType(room.getRoomType());
         roomDTO.setRoomPrice(room.getRoomPrice());
+        roomDTO.setRoomPhotoUrl(room.getRoomPhotoUrl());
         roomDTO.setImageName(room.getImageName());
         roomDTO.setImageType(room.getImageType());
         roomDTO.setImageData(room.getImageData());

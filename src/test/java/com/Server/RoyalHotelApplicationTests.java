@@ -1,10 +1,10 @@
-package com.phegon.PhegonHotelMongo;
+package com.Server;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class PhwgonHotelMongoApplicationTests {
+class RoyalHotelApplicationTests {
 
 	@Test
 	void contextLoads() {
