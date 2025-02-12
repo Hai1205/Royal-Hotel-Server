@@ -5,14 +5,13 @@ import com.Server.dto.Response;
 import com.Server.entity.User;
 
 public interface IUserService {
-
     Response register(User user);
 
     Response login(LoginRequest loginRequest);
 
-    Response getAllUsers();
+    Response getAllUsers(int page, int limit, String sort, String order);
 
-    Response getUSerBookingHistory(String userId);
+    Response getUserBookingHistory(String userId);
 
     Response deleteUser(String userId);
 

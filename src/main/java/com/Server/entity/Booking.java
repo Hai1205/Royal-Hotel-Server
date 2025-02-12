@@ -44,6 +44,8 @@ public class Booking {
     @CreatedDate
     private Instant createdAt;
 
+    private long cost;
+
     public void calculateTotalNumbersOfGuests(){
         this.totalNumOfGuest = this.numOfAdults + this.numOfChildren;
     }
@@ -69,6 +71,7 @@ public class Booking {
                 ", totalNumOfGuest=" + totalNumOfGuest +
                 ", bookingConfirmationCode='" + bookingConfirmationCode + '\'' +
                 ", createdAt=" + createdAt +
+                ", cost=" + cost +
                 '}';
     }
 }

@@ -2,10 +2,9 @@ package com.Server.controller;
 
 
 import com.Server.dto.Response;
-import com.Server.service.interfac.IRoomService;
+import com.Server.service.impl.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +18,7 @@ import java.util.List;
 @RequestMapping("/rooms")
 public class RoomController {
     @Autowired
-    private IRoomService roomService;
+    private RoomService roomService;
 
     @PostMapping("/add")
     @PreAuthorize("hasAuthority('ADMIN')")
@@ -46,8 +45,8 @@ public class RoomController {
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "6") int limit,
             @RequestParam(defaultValue = "createdAt") String sort,
-            @RequestParam(defaultValue = "asc") String order)
-    {
+            @RequestParam(defaultValue = "asc") String order
+    ) {
         Response response = roomService.getAllRooms(page, limit, sort, order);
 
         return ResponseEntity.status(response.getStatusCode()).body(response);
@@ -66,8 +65,13 @@ public class RoomController {
     }
 
     @GetMapping("/all-available-rooms")
-    public ResponseEntity<Response> getAvailableRooms() {
-        Response response = roomService.getAllAvailableRooms();
+    public ResponseEntity<Response> getAvailableRooms(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "6") int limit,
+            @RequestParam(defaultValue = "createdAt") String sort,
+            @RequestParam(defaultValue = "asc") String order
+    ) {
+        Response response = roomService.getAllAvailableRooms(page, limit, sort, order);
 
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
@@ -76,8 +80,12 @@ public class RoomController {
     public ResponseEntity<Response> getAvailableRoomsByDateAndType(
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkInDate,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkOutDate,
-            @RequestParam(required = false) String roomType)
-    {
+            @RequestParam(required = false) String roomType,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "6") int limit,
+            @RequestParam(defaultValue = "createdAt") String sort,
+            @RequestParam(defaultValue = "asc") String order
+    ) {
         if (checkInDate == null || checkOutDate == null || roomType.isBlank()) {
             Response response = new Response();
             response.setStatusCode(400);
@@ -85,7 +93,8 @@ public class RoomController {
 
             return ResponseEntity.status(response.getStatusCode()).body(response);
         }
-        Response response = roomService.getAvailableRoomsByDateAndType(checkInDate, checkOutDate, roomType);
+
+        Response response = roomService.getAvailableRoomsByDateAndType(page, limit, sort, order, checkInDate, checkOutDate, roomType);
 
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
@@ -97,7 +106,8 @@ public class RoomController {
             @RequestParam(value = "photo", required = false) List<MultipartFile> photos,
             @RequestParam(value = "roomType", required = false) String roomType,
             @RequestParam(value = "roomPrice", required = false) BigDecimal roomPrice,
-            @RequestParam(value = "roomDescription", required = false) String roomDescription) {
+            @RequestParam(value = "roomDescription", required = false) String roomDescription
+    ) {
         Response response = roomService.updateRoom(roomId, roomDescription, roomType, roomPrice, photos);
 
         return ResponseEntity.status(response.getStatusCode()).body(response);

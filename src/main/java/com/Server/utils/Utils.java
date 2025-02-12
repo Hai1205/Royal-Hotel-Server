@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 public class Utils {
     private static final String ALPHANUMERIC_STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
     private static final SecureRandom secureRandom = new SecureRandom();
 
     public static String generateRandomConfirmationCode(int length) {
@@ -58,6 +59,7 @@ public class Utils {
         bookingDTO.setNumOfAdults(booking.getNumOfAdults());
         bookingDTO.setTotalNumOfGuest(booking.getTotalNumOfGuest());
         bookingDTO.setBookingConfirmationCode(booking.getBookingConfirmationCode());
+        bookingDTO.setCost(booking.getCost());
 
         return bookingDTO;
     }
@@ -88,6 +90,7 @@ public class Utils {
         bookingDTO.setNumOfAdults(booking.getNumOfAdults());
         bookingDTO.setTotalNumOfGuest(booking.getTotalNumOfGuest());
         bookingDTO.setBookingConfirmationCode(booking.getBookingConfirmationCode());
+        bookingDTO.setCost(booking.getCost());
 
         if (mapUser) {
             bookingDTO.setUser(Utils.mapUserEntityToUserDTO(booking.getUser()));

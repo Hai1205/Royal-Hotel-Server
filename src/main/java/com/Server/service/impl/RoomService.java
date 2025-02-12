@@ -188,44 +188,51 @@ public class RoomService implements IRoomService {
     }
 
     @Override
-    public Response getAvailableRoomsByDateAndType(LocalDate checkInDate, LocalDate checkOutDate, String roomType) {
+    public Response getAvailableRoomsByDateAndType(int page, int limit, String sort, String order, LocalDate checkInDate, LocalDate checkOutDate, String roomType) {
         Response response = new Response();
 
         try {
+            Sort.Direction direction = order.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+            Pageable pageable = PageRequest.of(page - 1, limit, Sort.by(direction, sort));
+
             List<Booking> bookings = bookingRepository.findBookingsByDateRange(checkInDate, checkOutDate);
             List<String> bookedRoomsId = bookings.stream().map(booking -> booking.getRoom().getId()).toList();
-
-            List<Room> availableRooms = roomRepository.findByRoomTypeLikeAndIdNotIn(roomType, bookedRoomsId);
-            List<RoomDTO> roomDTOList = Utils.mapRoomListEntityToRoomListDTO(availableRooms);
+            Page<Room> roomPage = roomRepository.findByRoomTypeLikeAndIdNotIn(roomType, bookedRoomsId, pageable);
+            List<RoomDTO> roomDTOList = Utils.mapRoomListEntityToRoomListDTO(roomPage.getContent());
 
             response.setStatusCode(200);
             response.setMessage("successful");
+            response.setPagination(new Pagination(roomPage.getTotalElements(), roomPage.getTotalPages(), page));
             response.setRoomList(roomDTOList);
         } catch (OurException e) {
             response.setStatusCode(404);
             response.setMessage(e.getMessage());
         } catch (Exception e) {
             response.setStatusCode(500);
-            response.setMessage("Error occurred while getting  available rooms by date range: " + e.getMessage());
+            response.setMessage("Error occurred while getting available rooms by date range: " + e.getMessage());
         }
 
         return response;
     }
 
     @Override
-    public Response getAllAvailableRooms() {
+    public Response getAllAvailableRooms(int page, int limit, String sort, String order) {
         Response response = new Response();
 
         try {
-            List<Room> roomList = roomRepository.findAllAvailableRooms();
-            List<RoomDTO> roomDTOList = Utils.mapRoomListEntityToRoomListDTO(roomList);
+            Sort.Direction direction = order.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+
+            Pageable pageable = PageRequest.of(page - 1, limit, Sort.by(direction, sort));
+            Page<Room> roomPage = roomRepository.findAllAvailableRooms(pageable);
+            List<RoomDTO> roomDTOList = Utils.mapRoomListEntityToRoomListDTO(roomPage.getContent());
 
             response.setStatusCode(200);
             response.setMessage("successful");
+            response.setPagination(new Pagination(roomPage.getTotalElements(), roomPage.getTotalPages(), page));
             response.setRoomList(roomDTOList);
         } catch (Exception e) {
             response.setStatusCode(500);
-            response.setMessage("Error occurred while getting  all available rooms: " + e.getMessage());
+            response.setMessage("Error occurred while getting all available rooms: " + e.getMessage());
         }
 
         return response;

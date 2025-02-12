@@ -2,7 +2,7 @@ package com.Server.controller;
 
 import com.Server.dto.Response;
 import com.Server.entity.Booking;
-import com.Server.service.interfac.IBookingService;
+import com.Server.service.impl.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -12,15 +12,15 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/bookings")
 public class BookingController {
     @Autowired
-    private IBookingService bookingService;
+    private BookingService bookingService;
 
     @PostMapping("/book-room/{roomId}/{userId}")
     @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER')")
     public ResponseEntity<Response> saveBooking(
             @PathVariable String roomId,
             @PathVariable String userId,
-            @RequestBody Booking bookingRequest) {
-        System.out.println(bookingRequest);
+            @RequestBody Booking bookingRequest
+    ) {
         Response response = bookingService.saveBooking(roomId, userId, bookingRequest);
 
         return ResponseEntity.status(response.getStatusCode()).body(response);
@@ -28,8 +28,27 @@ public class BookingController {
 
     @GetMapping("/all")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<Response> getAllBookings() {
-        Response response = bookingService.getAllBookings();
+    public ResponseEntity<Response> getAllBookings(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "6") int limit,
+            @RequestParam(defaultValue = "createdAt") String sort,
+            @RequestParam(defaultValue = "asc") String order
+    ) {
+        Response response = bookingService.getAllBookings(page, limit, sort, order);
+
+        return ResponseEntity.status(response.getStatusCode()).body(response);
+    }
+
+    @GetMapping("/get-user-bookings/{userId}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<Response> getUserBookings(
+            @PathVariable String userId,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "6") int limit,
+            @RequestParam(defaultValue = "createdAt") String sort,
+            @RequestParam(defaultValue = "asc") String order
+    ) {
+        Response response = bookingService.getUserBookings(page, limit, sort, order, userId);
 
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }

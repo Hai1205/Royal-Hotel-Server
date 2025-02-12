@@ -1,6 +1,7 @@
 package com.Server.service.impl;
 
 import com.Server.dto.LoginRequest;
+import com.Server.dto.Pagination;
 import com.Server.dto.Response;
 import com.Server.dto.UserDTO;
 import com.Server.entity.User;
@@ -10,6 +11,10 @@ import com.Server.service.interfac.IUserService;
 import com.Server.utils.JWTUtils;
 import com.Server.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -89,26 +94,31 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public Response getAllUsers() {
+    public Response getAllUsers(int page, int limit, String sort, String order) {
         Response response = new Response();
 
         try {
-            List<User> userList = userRepository.findAll();
-            List<UserDTO> userDTOList = Utils.mapUserListEntityToUserListDTO(userList);
+            Sort.Direction direction = order.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+            Pageable pageable = PageRequest.of(page - 1, limit, Sort.by(direction, sort));
+
+            Page<User> userPage = userRepository.findAll(pageable);
+            List<UserDTO> userDTOList = Utils.mapUserListEntityToUserListDTO(userPage.getContent());
 
             response.setStatusCode(200);
             response.setMessage("successful");
+            response.setPagination(new Pagination(userPage.getTotalElements(), userPage.getTotalPages(), page));
+
             response.setUserList(userDTOList);
-        }catch (Exception e) {
+        } catch (Exception e) {
             response.setStatusCode(500);
-            response.setMessage( "Error while getting all users: " +e.getMessage());
+            response.setMessage("Error while getting all users: " + e.getMessage());
         }
 
         return response;
     }
 
     @Override
-    public Response getUSerBookingHistory(String userId) {
+    public Response getUserBookingHistory(String userId) {
         Response response = new Response();
 
         try {

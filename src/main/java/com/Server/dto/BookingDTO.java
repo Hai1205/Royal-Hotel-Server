@@ -28,4 +28,6 @@ public class BookingDTO {
     private RoomDTO room;
 
     private Instant createdAt;
+
+    private long cost;
 }

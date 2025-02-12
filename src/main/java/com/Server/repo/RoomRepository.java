@@ -12,10 +12,10 @@ public interface RoomRepository extends MongoRepository<Room, String> {
     @Aggregation("{ $group: { _id: '$roomType'} }")
     List<String> findDistinctRoomType();
 
-    @Query("{ 'bookings': {$size: 0 } }")
-    List<Room> findAllAvailableRooms();
-
-    List<Room> findByRoomTypeLikeAndIdNotIn(String roomType, List<String> bookedRoomIds);
-
     Page<Room> findAll(Pageable pageable);
+
+    @Query("{ 'bookings': {$size: 0 } }")
+    Page<Room> findAllAvailableRooms(Pageable pageable);
+
+    Page<Room> findByRoomTypeLikeAndIdNotIn(String roomType, List<String> bookedRoomsId, Pageable pageable);
 }
