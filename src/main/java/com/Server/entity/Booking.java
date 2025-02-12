@@ -1,13 +1,15 @@
-package com.Server.model;
+package com.Server.entity;
 
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.Instant;
 import java.time.LocalDate;
 
 @Data
@@ -39,6 +41,9 @@ public class Booking {
     @DBRef
     private Room room;
 
+    @CreatedDate
+    private Instant createdAt;
+
     public void calculateTotalNumbersOfGuests(){
         this.totalNumOfGuest = this.numOfAdults + this.numOfChildren;
     }
@@ -63,6 +68,7 @@ public class Booking {
                 ", numOfChildren=" + numOfChildren +
                 ", totalNumOfGuest=" + totalNumOfGuest +
                 ", bookingConfirmationCode='" + bookingConfirmationCode + '\'' +
+                ", createdAt=" + createdAt +
                 '}';
     }
 }

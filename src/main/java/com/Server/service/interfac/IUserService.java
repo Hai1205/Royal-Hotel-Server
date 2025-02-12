@@ -2,7 +2,7 @@ package com.Server.service.interfac;
 
 import com.Server.dto.LoginRequest;
 import com.Server.dto.Response;
-import com.Server.model.User;
+import com.Server.entity.User;
 
 public interface IUserService {
 

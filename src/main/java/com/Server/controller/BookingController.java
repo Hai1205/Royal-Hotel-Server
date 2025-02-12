@@ -1,7 +1,7 @@
 package com.Server.controller;
 
 import com.Server.dto.Response;
-import com.Server.model.Booking;
+import com.Server.entity.Booking;
 import com.Server.service.interfac.IBookingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

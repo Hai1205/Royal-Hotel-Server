@@ -3,7 +3,7 @@ package com.Server.service.impl;
 import com.Server.dto.LoginRequest;
 import com.Server.dto.Response;
 import com.Server.dto.UserDTO;
-import com.Server.model.User;
+import com.Server.entity.User;
 import com.Server.exception.OurException;
 import com.Server.repo.UserRepository;
 import com.Server.service.interfac.IUserService;

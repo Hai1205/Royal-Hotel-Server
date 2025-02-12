@@ -3,7 +3,7 @@ package com.Server.service.impl;
 
 
 import com.Server.dto.*;
-import com.Server.model.*;
+import com.Server.entity.*;
 import com.Server.exception.OurException;
 import com.Server.repo.*;
 import com.Server.service.interfac.IBookingService;

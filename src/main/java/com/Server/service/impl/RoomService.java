@@ -1,9 +1,10 @@
 package com.Server.service.impl;
 
+import com.Server.dto.Pagination;
 import com.Server.dto.Response;
 import com.Server.dto.RoomDTO;
-import com.Server.model.Booking;
-import com.Server.model.Room;
+import com.Server.entity.Booking;
+import com.Server.entity.Room;
 import com.Server.exception.OurException;
 import com.Server.repo.BookingRepository;
 import com.Server.repo.RoomRepository;
@@ -11,6 +12,10 @@ import com.Server.service.AwsS3Service;
 import com.Server.service.interfac.IRoomService;
 import com.Server.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -68,19 +73,24 @@ public class RoomService implements IRoomService {
     }
 
     @Override
-    public Response getAllRooms() {
+    public Response getAllRooms(int page, int limit, String sort, String order) {
         Response response = new Response();
 
         try {
-            List<Room> roomList = roomRepository.findAll();
-            List<RoomDTO> roomDTOList = Utils.mapRoomListEntityToRoomListDTO(roomList);
+            Sort.Direction direction = order.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+            Pageable pageable = PageRequest.of(page - 1, limit, Sort.by(direction, sort));
+
+            Page<Room> roomPage = roomRepository.findAll(pageable);
+
+            List<RoomDTO> roomDTOList = Utils.mapRoomListEntityToRoomListDTO(roomPage.getContent());
 
             response.setStatusCode(200);
-            response.setMessage("successful");
+            response.setMessage("Successful");
+            response.setPagination(new Pagination(roomPage.getTotalElements(), roomPage.getTotalPages(), page));
             response.setRoomList(roomDTOList);
         } catch (Exception e) {
             response.setStatusCode(500);
-            response.setMessage("Error occurred while getting  all room: " + e.getMessage());
+            response.setMessage("Error occurred while getting all rooms: " + e.getMessage());
         }
 
         return response;
@@ -94,7 +104,7 @@ public class RoomService implements IRoomService {
             Room room = roomRepository.findById(roomId).orElseThrow(() -> new OurException("Room Not Found"));
 
             List<String> imageUrls = room.getImageUrls();
-            for(String imageUrl : imageUrls){
+            for (String imageUrl : imageUrls) {
                 awsS3Service.deleteImageFromS3(imageUrl);
             }
 
@@ -117,14 +127,14 @@ public class RoomService implements IRoomService {
         Response response = new Response();
 
         try {
-            Room room = roomRepository.findById(roomId).orElseThrow(()-> new OurException("Room Not Found"));
+            Room room = roomRepository.findById(roomId).orElseThrow(() -> new OurException("Room Not Found"));
 
             if (roomType != null) room.setRoomType(roomType);
             if (roomPrice != null) room.setRoomPrice(roomPrice);
             if (description != null) room.setRoomDescription(description);
 
             List<String> savedImageUrls = room.getImageUrls();
-            for(String imageUrl : savedImageUrls){
+            for (String imageUrl : savedImageUrls) {
                 awsS3Service.deleteImageFromS3(imageUrl);
             }
 
@@ -160,7 +170,7 @@ public class RoomService implements IRoomService {
         Response response = new Response();
 
         try {
-            Room room = roomRepository.findById(roomId).orElseThrow(()-> new OurException("Room Not Found"));
+            Room room = roomRepository.findById(roomId).orElseThrow(() -> new OurException("Room Not Found"));
             RoomDTO roomDTO = Utils.mapRoomEntityToRoomDTOPlusBookings(room);
 
             response.setStatusCode(200);
@@ -213,7 +223,7 @@ public class RoomService implements IRoomService {
             response.setStatusCode(200);
             response.setMessage("successful");
             response.setRoomList(roomDTOList);
-        }catch (Exception e) {
+        } catch (Exception e) {
             response.setStatusCode(500);
             response.setMessage("Error occurred while getting  all available rooms: " + e.getMessage());
         }

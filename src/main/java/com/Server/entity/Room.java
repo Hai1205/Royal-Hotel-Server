@@ -1,11 +1,13 @@
-package com.Server.model;
+package com.Server.entity;
 
 import lombok.Data;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +28,9 @@ public class Room {
     @DBRef
     private List<Booking> bookings = new ArrayList<>();
 
+    @CreatedDate
+    private Instant createdAt;
+
     @Override
     public String toString() {
         return "Room{" +
@@ -33,6 +38,7 @@ public class Room {
                 ", roomType='" + roomType + '\'' +
                 ", roomPrice=" + roomPrice +
                 ", description='" + roomDescription + '\'' +
+                ", createdAt=" + createdAt +
                 '}';
     }
 }

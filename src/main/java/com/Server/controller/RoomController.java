@@ -42,8 +42,13 @@ public class RoomController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<Response> getAllRooms() {
-        Response response = roomService.getAllRooms();
+    public ResponseEntity<Response> getAllRooms(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "6") int limit,
+            @RequestParam(defaultValue = "createdAt") String sort,
+            @RequestParam(defaultValue = "asc") String order)
+    {
+        Response response = roomService.getAllRooms(page, limit, sort, order);
 
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
@@ -71,8 +76,8 @@ public class RoomController {
     public ResponseEntity<Response> getAvailableRoomsByDateAndType(
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkInDate,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkOutDate,
-            @RequestParam(required = false) String roomType
-    ) {
+            @RequestParam(required = false) String roomType)
+    {
         if (checkInDate == null || checkOutDate == null || roomType.isBlank()) {
             Response response = new Response();
             response.setStatusCode(400);

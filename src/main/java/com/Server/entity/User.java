@@ -1,7 +1,8 @@
-package com.Server.model;
+package com.Server.entity;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -9,6 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -16,15 +18,22 @@ import java.util.List;
 @Data
 @Document(collection = "users")
 public class User implements UserDetails {
-
     @Id
     private String id;
+
     @NotBlank(message = "Email is required")
     private String email;
+
     private String name;
+
     private String phoneNumber;
+
     private String  password;
+
     private String role;
+
+    @CreatedDate
+    private Instant createdAt;
 
     @DBRef
     private List<Booking> bookings = new ArrayList<>();
@@ -68,6 +77,7 @@ public class User implements UserDetails {
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", password='" + password + '\'' +
                 ", role='" + role + '\'' +
+                ", createdAt=" + createdAt +
                 '}';
     }
 }

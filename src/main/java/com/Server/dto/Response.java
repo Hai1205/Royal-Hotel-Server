@@ -10,6 +10,7 @@ import java.util.List;
 public class Response {
     private int statusCode;
     private String message;
+    private Pagination pagination;
 
     private String token;
     private String role;

@@ -13,7 +13,7 @@ public interface IRoomService {
 
     List<String> getAllRoomTypes();
 
-    Response getAllRooms();
+    Response getAllRooms(int page, int limit, String sort, String order);
 
     Response deleteRoom(String roomId);
 

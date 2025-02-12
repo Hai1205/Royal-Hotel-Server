@@ -1,6 +1,6 @@
 package com.Server.repo;
 
-import com.Server.model.User;
+import com.Server.entity.User;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.Optional;

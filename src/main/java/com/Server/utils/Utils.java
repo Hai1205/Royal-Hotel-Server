@@ -1,7 +1,7 @@
 package com.Server.utils;
 
 import com.Server.dto.*;
-import com.Server.model.*;
+import com.Server.entity.*;
 
 import java.security.SecureRandom;
 import java.util.List;
@@ -43,6 +43,7 @@ public class Utils {
         roomDTO.setRoomPrice(room.getRoomPrice());
         roomDTO.setImageUrls(room.getImageUrls());
         roomDTO.setRoomDescription(room.getRoomDescription());
+        roomDTO.setCreatedAt(room.getCreatedAt());
 
         return roomDTO;
     }
