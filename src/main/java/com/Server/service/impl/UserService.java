@@ -20,10 +20,13 @@ import java.util.List;
 public class UserService implements IUserService {
     @Autowired
     private UserRepository userRepository;
+
     @Autowired
     private PasswordEncoder passwordEncoder;
+
     @Autowired
     private JWTUtils jwtUtils;
+
     @Autowired
     private AuthenticationManager authenticationManager;
 
@@ -49,7 +52,6 @@ public class UserService implements IUserService {
             response.setStatusCode(200);
             response.setMessage("successful");
             response.setUser(userDTO);
-
         } catch (OurException e) {
             response.setStatusCode(400);
             response.setMessage(e.getMessage());
@@ -57,6 +59,7 @@ public class UserService implements IUserService {
             response.setStatusCode(500);
             response.setMessage( "Error while registering a user: " +e.getMessage());
         }
+
         return response;
     }
 
@@ -74,26 +77,25 @@ public class UserService implements IUserService {
             response.setToken(token);
             response.setRole(user.getRole());
             response.setExpirationTime("7 days");
-
         } catch (OurException e) {
             response.setStatusCode(404);
             response.setMessage(e.getMessage());
-
         } catch (Exception e) {
             response.setStatusCode(500);
             response.setMessage( "Error while logging in a user: " +e.getMessage());
         }
+
         return response;
     }
 
     @Override
     public Response getAllUsers() {
-
         Response response = new Response();
 
         try {
             List<User> userList = userRepository.findAll();
             List<UserDTO> userDTOList = Utils.mapUserListEntityToUserListDTO(userList);
+
             response.setStatusCode(200);
             response.setMessage("successful");
             response.setUserList(userDTOList);
@@ -101,6 +103,7 @@ public class UserService implements IUserService {
             response.setStatusCode(500);
             response.setMessage( "Error while getting all users: " +e.getMessage());
         }
+
         return response;
     }
 
@@ -111,6 +114,7 @@ public class UserService implements IUserService {
         try {
             User user = userRepository.findById(userId).orElseThrow(()-> new OurException("User Not Found"));
             UserDTO userDTO= Utils.mapUserEntityToUserDTOPlusUserBookingsAndRoom(user);
+
             response.setStatusCode(200);
             response.setMessage("successful");
             response.setUser(userDTO);
@@ -121,6 +125,7 @@ public class UserService implements IUserService {
             response.setStatusCode(500);
             response.setMessage( "Error while getting user booking history: " +e.getMessage());
         }
+
         return response;
     }
 
@@ -140,6 +145,7 @@ public class UserService implements IUserService {
             response.setStatusCode(500);
             response.setMessage( "Error while deleting a user: " +e.getMessage());
         }
+
         return response;
     }
 
@@ -161,6 +167,7 @@ public class UserService implements IUserService {
             response.setStatusCode(500);
             response.setMessage( "Error while getting a user by id : " +e.getMessage());
         }
+
         return response;
     }
 
@@ -182,6 +189,7 @@ public class UserService implements IUserService {
             response.setStatusCode(500);
             response.setMessage( "Error while getting a user infor: " +e.getMessage());
         }
+
         return response;
     }
 }

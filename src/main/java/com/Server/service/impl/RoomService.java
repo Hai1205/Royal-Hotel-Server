@@ -16,37 +16,40 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class RoomService implements IRoomService {
-
     @Autowired
     private RoomRepository roomRepository;
 
     @Autowired
     private BookingRepository bookingRepository;
+
     @Autowired
     private AwsS3Service awsS3Service;
 
     @Override
-    public Response addNewRoom(MultipartFile photo, String roomType, BigDecimal roomPrice, String description) {
-
+    public Response addNewRoom(List<MultipartFile> photos, String roomType, BigDecimal roomPrice, String description) {
         Response response = new Response();
 
         try {
-            String imageUrl = awsS3Service.saveImageToS3(photo);
+            List<String> imageUrls = new ArrayList<>();
+
+            for (MultipartFile photo : photos) {
+                String imageUrl = awsS3Service.saveImageToS3(photo);
+                imageUrls.add(imageUrl);
+            }
+
             Room room = new Room();
-            room.setRoomPhotoUrl(imageUrl);
+            room.setImageUrls(imageUrls);
             room.setRoomPrice(roomPrice);
             room.setRoomType(roomType);
             room.setRoomDescription(description);
 
-            Room savedRoo = roomRepository.save(room);
-            RoomDTO roomDTO = Utils.mapRoomEntityToRoomDTO(savedRoo);
-//            System.out.println("room photo "+room.getRoomPhotoUrl());
-//            System.out.println("savedRoo photo "+savedRoo.getRoomPhotoUrl());
-//            System.out.println("roomDTO photo "+roomDTO.getRoomPhotoUrl());
+            Room savedRoom = roomRepository.save(room);
+            RoomDTO roomDTO = Utils.mapRoomEntityToRoomDTO(savedRoom);
 
             response.setStatusCode(200);
             response.setMessage("successful");
@@ -58,32 +61,6 @@ public class RoomService implements IRoomService {
 
         return response;
     }
-//    @Override
-//    public Response addNewRoom(MultipartFile photo, String roomType, BigDecimal roomPrice, String description) {
-//        Response response = new Response();
-//
-//        try {
-//            Room room = new Room();
-//            room.setImageName(photo.getOriginalFilename());
-//            room.setImageType(photo.getContentType());
-//            room.setImageData(photo.getBytes());
-//            room.setRoomPrice(roomPrice);
-//            room.setRoomType(roomType);
-//            room.setRoomDescription(description);
-//
-//            Room savedRoo = roomRepository.save(room);
-//            RoomDTO roomDTO = Utils.mapRoomEntityToRoomDTO(savedRoo);
-//
-//            response.setStatusCode(200);
-//            response.setMessage("successful");
-//            response.setRoom(roomDTO);
-//        } catch (Exception e) {
-//            response.setStatusCode(500);
-//            response.setMessage("Error occurred while saving a room: " + e.getMessage());
-//        }
-//
-//        return response;
-//    }
 
     @Override
     public List<String> getAllRoomTypes() {
@@ -114,7 +91,13 @@ public class RoomService implements IRoomService {
         Response response = new Response();
 
         try {
-            roomRepository.findById(roomId).orElseThrow(() -> new OurException("Room Not Found"));
+            Room room = roomRepository.findById(roomId).orElseThrow(() -> new OurException("Room Not Found"));
+
+            List<String> imageUrls = room.getImageUrls();
+            for(String imageUrl : imageUrls){
+                awsS3Service.deleteImageFromS3(imageUrl);
+            }
+
             roomRepository.deleteById(roomId);
 
             response.setStatusCode(200);
@@ -130,7 +113,7 @@ public class RoomService implements IRoomService {
     }
 
     @Override
-    public Response updateRoom(String roomId, String description, String roomType, BigDecimal roomPrice, MultipartFile photo) {
+    public Response updateRoom(String roomId, String description, String roomType, BigDecimal roomPrice, List<MultipartFile> photos) {
         Response response = new Response();
 
         try {
@@ -139,10 +122,20 @@ public class RoomService implements IRoomService {
             if (roomType != null) room.setRoomType(roomType);
             if (roomPrice != null) room.setRoomPrice(roomPrice);
             if (description != null) room.setRoomDescription(description);
-            if (photo != null && !photo.isEmpty()) {
-                room.setImageName(photo.getOriginalFilename());
-                room.setImageType(photo.getContentType());
-                room.setImageData(photo.getBytes());
+
+            List<String> savedImageUrls = room.getImageUrls();
+            for(String imageUrl : savedImageUrls){
+                awsS3Service.deleteImageFromS3(imageUrl);
+            }
+
+            if (photos != null && !photos.isEmpty()) {
+                List<String> imageUrls = new ArrayList<>();
+                for (MultipartFile photo : photos) {
+                    String imageUrl = awsS3Service.saveImageToS3(photo);
+                    imageUrls.add(imageUrl);
+                }
+
+                room.setImageUrls(imageUrls);
             }
 
             Room updatedRoom = roomRepository.save(room);

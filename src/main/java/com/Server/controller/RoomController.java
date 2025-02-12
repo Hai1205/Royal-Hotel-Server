@@ -24,21 +24,21 @@ public class RoomController {
     @PostMapping("/add")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Response> addNewRoom(
-            @RequestParam(value = "photo", required = false) MultipartFile photo,
+            @RequestParam(value = "photos", required = false) List<MultipartFile> photos,
             @RequestParam(value = "roomType", required = false) String roomType,
             @RequestParam(value = "roomPrice", required = false) BigDecimal roomPrice,
             @RequestParam(value = "roomDescription", required = false) String roomDescription
     ) {
-        if (photo == null || roomType == null || roomPrice == null) {
+        if (photos == null || photos.isEmpty() || roomType == null || roomPrice == null) {
             Response response = new Response();
             response.setStatusCode(400);
-            response.setMessage("Please Provide values for all fields(photo, roomType, roomPrice)");
+            response.setMessage("Please Provide values for all fields (photos, roomType, roomPrice)");
 
             return ResponseEntity.status(response.getStatusCode()).body(response);
         }
-            Response response = roomService.addNewRoom(photo, roomType, roomPrice, roomDescription);
+        Response response = roomService.addNewRoom(photos, roomType, roomPrice, roomDescription);
 
-            return ResponseEntity.status(response.getStatusCode()).body(response);
+        return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
     @GetMapping("/all")
@@ -89,11 +89,11 @@ public class RoomController {
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Response> updateRoom(
             @PathVariable String roomId,
-            @RequestParam(value = "photo", required = false) MultipartFile photo,
+            @RequestParam(value = "photo", required = false) List<MultipartFile> photos,
             @RequestParam(value = "roomType", required = false) String roomType,
             @RequestParam(value = "roomPrice", required = false) BigDecimal roomPrice,
             @RequestParam(value = "roomDescription", required = false) String roomDescription) {
-        Response response = roomService.updateRoom(roomId, roomDescription, roomType, roomPrice, photo);
+        Response response = roomService.updateRoom(roomId, roomDescription, roomType, roomPrice, photos);
 
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
@@ -104,15 +104,5 @@ public class RoomController {
         Response response = roomService.deleteRoom(roomId);
 
         return ResponseEntity.status(response.getStatusCode()).body(response);
-    }
-
-    @GetMapping("/image/{roomId}")
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<byte[]> getImageByProductId(@PathVariable String roomId) {
-        Response response = roomService.getRoomById(roomId);
-
-        byte[] imageFile = response.getRoom().getImageData();
-
-        return ResponseEntity.ok().contentType(MediaType.valueOf(response.getRoom().getImageType())).body(imageFile);
     }
 }

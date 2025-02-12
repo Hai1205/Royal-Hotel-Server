@@ -15,13 +15,7 @@ public class RoomDTO {
 
     private BigDecimal roomPrice;
 
-    private String roomPhotoUrl;
-
-    private String imageName;
-
-    private String imageType;
-
-    private byte[] imageData;
+    private List<String> imageUrls;
 
     private String roomDescription;
 

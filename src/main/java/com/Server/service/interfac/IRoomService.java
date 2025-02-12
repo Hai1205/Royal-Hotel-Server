@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface IRoomService {
 
-    Response addNewRoom(MultipartFile photo, String roomType, BigDecimal roomPrice, String description);
+    Response addNewRoom(List<MultipartFile> photos, String roomType, BigDecimal roomPrice, String description);
 
     List<String> getAllRoomTypes();
 
@@ -17,7 +17,7 @@ public interface IRoomService {
 
     Response deleteRoom(String roomId);
 
-    Response updateRoom(String roomId, String description, String roomType, BigDecimal roomPrice, MultipartFile photo);
+    Response updateRoom(String roomId, String description, String roomType, BigDecimal roomPrice, List<MultipartFile> photos);
 
     Response getRoomById(String roomId);
 
