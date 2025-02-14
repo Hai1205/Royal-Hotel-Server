@@ -24,9 +24,11 @@ C:\Users\ASUS\OneDrive\Máy tính\HocTap\Java\Springboot\project\Royal-Hotel\Roy
 C:\Users\ASUS\OneDrive\Máy tính\HocTap\Java\Springboot\project\Royal-Hotel\Royal-Hotel-Server\src\main\java\com\Server\service\AwsS3Service.java
 C:\Users\ASUS\OneDrive\Máy tính\HocTap\Java\Springboot\project\Royal-Hotel\Royal-Hotel-Server\src\main\java\com\Server\service\CustomUserDetailsService.java
 C:\Users\ASUS\OneDrive\Máy tính\HocTap\Java\Springboot\project\Royal-Hotel\Royal-Hotel-Server\src\main\java\com\Server\service\impl\BookingService.java
+C:\Users\ASUS\OneDrive\Máy tính\HocTap\Java\Springboot\project\Royal-Hotel\Royal-Hotel-Server\src\main\java\com\Server\service\impl\EmailService.java
 C:\Users\ASUS\OneDrive\Máy tính\HocTap\Java\Springboot\project\Royal-Hotel\Royal-Hotel-Server\src\main\java\com\Server\service\impl\RoomService.java
 C:\Users\ASUS\OneDrive\Máy tính\HocTap\Java\Springboot\project\Royal-Hotel\Royal-Hotel-Server\src\main\java\com\Server\service\impl\UserService.java
 C:\Users\ASUS\OneDrive\Máy tính\HocTap\Java\Springboot\project\Royal-Hotel\Royal-Hotel-Server\src\main\java\com\Server\service\interfac\IBookingService.java
+C:\Users\ASUS\OneDrive\Máy tính\HocTap\Java\Springboot\project\Royal-Hotel\Royal-Hotel-Server\src\main\java\com\Server\service\interfac\IEmailService.java
 C:\Users\ASUS\OneDrive\Máy tính\HocTap\Java\Springboot\project\Royal-Hotel\Royal-Hotel-Server\src\main\java\com\Server\service\interfac\IRoomService.java
 C:\Users\ASUS\OneDrive\Máy tính\HocTap\Java\Springboot\project\Royal-Hotel\Royal-Hotel-Server\src\main\java\com\Server\service\interfac\IUserService.java
 C:\Users\ASUS\OneDrive\Máy tính\HocTap\Java\Springboot\project\Royal-Hotel\Royal-Hotel-Server\src\main\java\com\Server\utils\JWTUtils.java

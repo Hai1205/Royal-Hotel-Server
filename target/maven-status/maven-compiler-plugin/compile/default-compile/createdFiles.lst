@@ -13,6 +13,7 @@ com\Server\dto\Response.class
 com\Server\exception\OurException.class
 com\Server\ServerApplication.class
 com\Server\controller\UserController.class
+com\Server\service\interfac\IEmailService.class
 com\Server\security\CorsConfig.class
 com\Server\entity\Room.class
 com\Server\service\interfac\IUserService.class
@@ -24,6 +25,7 @@ com\Server\service\interfac\IBookingService.class
 com\Server\service\interfac\IRoomService.class
 com\Server\entity\Booking.class
 com\Server\security\JWTAuthFilter.class
+com\Server\service\impl\EmailService.class
 com\Server\utils\JWTUtils.class
 com\Server\dto\UserDTO.class
 com\Server\entity\User.class
